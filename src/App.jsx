@@ -4,6 +4,8 @@ import Footer from './components/layout/Footer';
 import HomePage from './components/pages/HomePage';
 import TvGuidePage from './components/pages/TvGuidePage';
 import RecordingsPage from './components/pages/RecordingsPage';
+import ReplayPage from './components/pages/ReplayPage';
+import MoviesPage from './components/pages/MoviesPage';
 
 function App() {
   const [theme, setTheme] = useState('dark');
@@ -16,6 +18,10 @@ function App() {
         return <HomePage theme={theme} />;
       case 'TV_GUIDE':
         return <TvGuidePage theme={theme} />;
+      case 'REPLAY':
+        return <ReplayPage theme={theme} />;
+      case 'FILME':
+        return <MoviesPage theme={theme} />;
       case 'GESPEICHERT':
         return <RecordingsPage theme={theme} />;
       default:
