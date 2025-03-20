@@ -39,7 +39,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         </div>
         
         <p className="text-white text-center mb-6">
-          Please login with My SunCherry credentials
+          Please login with your SunCherry credentials
         </p>
         
         {/* Login Form */}
@@ -91,10 +91,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         {/* Forgot Password Links */}
         <div className="mt-6 space-y-2 text-center">
           <a href="#" className="block text-red-600 hover:underline text-sm">
-            Forgot My SunCherry password?
-          </a>
-          <a href="#" className="block text-red-600 hover:underline text-sm">
-            Forgot My UPC password?
+            Forgot your SunCherry password?
           </a>
         </div>
         
