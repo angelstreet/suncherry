@@ -6,6 +6,7 @@ import TvGuidePage from './components/pages/TvGuidePage';
 import RecordingsPage from './components/pages/RecordingsPage';
 import ReplayPage from './components/pages/ReplayPage';
 import MoviesPage from './components/pages/MoviesPage';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   const [theme, setTheme] = useState('dark');
@@ -35,18 +36,20 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col ${theme === 'light' ? 'bg-gray-100 text-gray-900' : 'bg-black text-white'}`}>
-      <Navbar 
-        theme={theme} 
-        onThemeChange={setTheme} 
-        activeItem={activeItem} 
-        setActiveItem={setActiveItem}
-      />
-      <div className="flex-grow">
-        {renderContent()}
+    <AuthProvider>
+      <div className={`min-h-screen flex flex-col ${theme === 'light' ? 'bg-gray-100 text-gray-900' : 'bg-black text-white'}`}>
+        <Navbar 
+          theme={theme} 
+          onThemeChange={setTheme} 
+          activeItem={activeItem} 
+          setActiveItem={setActiveItem}
+        />
+        <div className="flex-grow">
+          {renderContent()}
+        </div>
+        <Footer theme={theme} />
       </div>
-      <Footer theme={theme} />
-    </div>
+    </AuthProvider>
   );
 }
 

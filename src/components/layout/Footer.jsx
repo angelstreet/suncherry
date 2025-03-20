@@ -7,7 +7,7 @@ const Footer = ({ theme }) => {
     }`}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
         <div>
-          <h3 className="text-lg font-semibold mb-3">Sunrise TV</h3>
+          <h3 className="text-lg font-semibold mb-3">SunCherry TV</h3>
           <ul className="space-y-2 opacity-70">
             <li>Home</li>
             <li>TV Guide</li>
@@ -36,7 +36,7 @@ const Footer = ({ theme }) => {
       </div>
       
       <div className={`pt-4 border-t ${theme === 'light' ? 'border-gray-200' : 'border-gray-800'} flex justify-between items-center text-sm opacity-70`}>
-        <div>© 2025 Sunrise LLC. All rights reserved.</div>
+        <div>© 2025 SunCherry LLC. All rights reserved.</div>
         <div>Version 5.16.11010</div>
       </div>
     </footer>

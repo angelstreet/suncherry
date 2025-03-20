@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
-import { Search, Settings, User, Clock } from 'lucide-react';
+import { Search, Settings, User, Clock, LogIn, LogOut } from 'lucide-react';
 import { MENU_ITEMS } from '../../constants/menuItems';
 import ThemeModal from './ThemeModal';
+import LoginModal from '../auth/LoginModal';
+import { useAuth } from '../../context/AuthContext';
 
 const Navbar = ({ theme, onThemeChange, activeItem, setActiveItem }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const { isLoggedIn, user, login, logout } = useAuth();
+
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleLoginSuccess = (username) => {
+    login(username);
+  };
 
   return (
     <div className={`w-full ${theme === 'light' ? 'bg-white' : 'bg-black'}`}>
@@ -43,7 +55,28 @@ const Navbar = ({ theme, onThemeChange, activeItem, setActiveItem }) => {
             className={`w-4 h-4 ${theme === 'light' ? 'text-gray-800' : 'text-white'} opacity-70 hover:opacity-100 cursor-pointer`}
             onClick={() => setIsSettingsOpen(true)}
           />
-          <User className={`w-4 h-4 ${theme === 'light' ? 'text-gray-800' : 'text-white'} opacity-70 hover:opacity-100`} />
+          
+          {isLoggedIn ? (
+            <div className="flex items-center gap-2">
+              <User className={`w-4 h-4 ${theme === 'light' ? 'text-gray-800' : 'text-white'} opacity-70 hover:opacity-100`} />
+              <span className={`${theme === 'light' ? 'text-gray-800' : 'text-white'} text-xs`}>
+                {user.username}
+              </span>
+              <LogOut 
+                className={`w-4 h-4 ${theme === 'light' ? 'text-gray-800' : 'text-white'} opacity-70 hover:opacity-100 cursor-pointer ml-2`}
+                onClick={logout}
+              />
+            </div>
+          ) : (
+            <div 
+              className="flex items-center gap-1 cursor-pointer"
+              onClick={handleLoginClick}
+            >
+              <LogIn className={`w-4 h-4 ${theme === 'light' ? 'text-gray-800' : 'text-white'} opacity-70 hover:opacity-100`} />
+              <span className={`${theme === 'light' ? 'text-gray-800' : 'text-white'} text-xs`}>Login</span>
+            </div>
+          )}
+          
           <div className="flex items-center gap-2">
             <Clock className={`w-3 h-3 ${theme === 'light' ? 'text-gray-800' : 'text-white'} opacity-70`} />
             <span className={`${theme === 'light' ? 'text-gray-800' : 'text-white'} text-sm opacity-70`}>16:58</span>
@@ -56,6 +89,13 @@ const Navbar = ({ theme, onThemeChange, activeItem, setActiveItem }) => {
           setIsOpen={setIsSettingsOpen}
           currentTheme={theme}
           onThemeChange={onThemeChange}
+        />
+        
+        {/* Login Modal */}
+        <LoginModal 
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+          onLogin={handleLoginSuccess}
         />
       </nav>
     </div>
