@@ -9,7 +9,10 @@ import MoviesPage from './components/pages/MoviesPage';
 import ContentDetailPage from './components/pages/ContentDetailPage';
 import VideoPlayer from './components/player/VideoPlayer';
 import { AuthProvider } from './context/AuthContext';
+import { SkinProvider } from './context/SkinContext';
+import SkinOverlay from './components/skin/SkinOverlay';
 import { getContentById, SAMPLE_CONTENT_DETAILS } from './constants/sampleContentData';
+import './styles/animations.css';
 
 function App() {
   const [theme, setTheme] = useState('dark');
@@ -90,24 +93,31 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className={`min-h-screen flex flex-col ${theme === 'light' ? 'bg-gray-100 text-gray-900' : 'bg-black text-white'}`}>
-        {/* Only show navbar if not in player mode */}
-        {!isPlaying && (
-          <Navbar 
-            theme={theme} 
-            onThemeChange={setTheme} 
-            activeItem={activeItem} 
-            setActiveItem={(item) => {
-              setActiveItem(item);
-              setSelectedContent(null); // Clear selected content when changing menu items
-            }} 
-          />
-        )}
-        <div className={`flex-grow ${isPlaying ? 'h-screen' : ''}`}>
-          {renderContent()}
+      <SkinProvider>
+        <div className={`min-h-screen flex flex-col ${theme === 'light' ? 'bg-gray-100 text-gray-900' : 'bg-black text-white'}`}>
+          {/* Only show navbar if not in player mode */}
+          {!isPlaying && (
+            <Navbar 
+              theme={theme} 
+              onThemeChange={setTheme} 
+              activeItem={activeItem} 
+              setActiveItem={(item) => {
+                setActiveItem(item);
+                setSelectedContent(null); // Clear selected content when changing menu items
+              }} 
+            />
+          )}
+          
+          {/* Skin overlay - adds themed backgrounds and animations */}
+          <SkinOverlay />
+          
+          <div className={`flex-grow ${isPlaying ? 'h-screen' : ''}`}>
+            {renderContent()}
+          </div>
+          
+          {!isPlaying && !selectedContent && <Footer theme={theme} />}
         </div>
-        {!isPlaying && !selectedContent && <Footer theme={theme} />}
-      </div>
+      </SkinProvider>
     </AuthProvider>
   );
 }
