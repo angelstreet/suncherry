@@ -21,9 +21,22 @@ const GenreIcon = ({ genre }) => {
   }
 };
 
-const MoviesPage = ({ theme }) => {
+const MoviesPage = ({ theme, onContentSelect }) => {
   const [activeCategory, setActiveCategory] = useState('MOVIES');
   const [activeGenre, setActiveGenre] = useState('all');
+  
+  const handleContentClick = (contentId) => {
+    // Use the default if no real ID exists
+    if (onContentSelect) {
+      onContentSelect(contentId || "emmanuelle-2024");
+    }
+  };
+  
+  const handleFeaturedClick = (movieIndex) => {
+    if (onContentSelect && FEATURED_MOVIES[movieIndex]) {
+      onContentSelect(FEATURED_MOVIES[movieIndex].id);
+    }
+  };
   
   // Content to display based on active category
   const renderContent = () => {
@@ -33,10 +46,14 @@ const MoviesPage = ({ theme }) => {
           {/* Featured Movies - Hero Section */}
           <div className="mb-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {FEATURED_MOVIES.map((movie) => (
-                <div key={movie.id} className="relative overflow-hidden rounded-lg group cursor-pointer">
+              {FEATURED_MOVIES.map((movie, index) => (
+                <div 
+                  key={movie.id || index} 
+                  className="relative overflow-hidden rounded-lg group cursor-pointer"
+                  onClick={() => handleFeaturedClick(index)}
+                >
                   {/* Movie thumbnail */}
-                  <div className={`h-64 ${movie.thumbnail} relative`}>
+                  <div className={`h-64 ${movie.color} relative`}>
                     {/* Gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
                     
@@ -46,9 +63,7 @@ const MoviesPage = ({ theme }) => {
                       <div className="flex items-center gap-2 text-white/80 text-sm mb-2">
                         <span>{movie.year}</span>
                         <span>•</span>
-                        <span>{movie.duration}</span>
-                        <span>•</span>
-                        <span>{movie.genre.join(', ')}</span>
+                        <span>{movie.genre?.join(', ') || "Drama"}</span>
                       </div>
                       <button className="flex items-center gap-2 bg-red-600 text-white px-4 py-1 rounded-full text-sm hover:bg-red-700 transition-colors">
                         <Play className="w-3 h-3" />
@@ -95,6 +110,7 @@ const MoviesPage = ({ theme }) => {
                     key={movie.id} 
                     className={`${theme === 'light' ? 'bg-white shadow-md' : 'bg-gray-800'} 
                       rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow`}
+                    onClick={() => handleContentClick(movie.id)}
                   >
                     <div className={`h-40 ${movie.thumbnail} relative`}>
                       <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 text-xs rounded flex items-center gap-1 text-white">
@@ -108,7 +124,7 @@ const MoviesPage = ({ theme }) => {
                         {movie.year}
                       </div>
                       <div className={`text-xs ${theme === 'light' ? 'text-gray-500' : 'text-gray-400'}`}>
-                        {movie.genre.join(', ')}
+                        {Array.isArray(movie.genre) ? movie.genre.join(', ') : movie.genre}
                       </div>
                     </div>
                   </div>
@@ -135,6 +151,7 @@ const MoviesPage = ({ theme }) => {
                     key={series.id} 
                     className={`${theme === 'light' ? 'bg-white shadow-md' : 'bg-gray-800'} 
                       rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow`}
+                    onClick={() => handleContentClick("blacklist-s01e01")} // Use series ID in real implementation
                   >
                     <div className={`h-40 ${series.thumbnail} relative`}>
                       <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 text-xs rounded text-white">
@@ -147,7 +164,7 @@ const MoviesPage = ({ theme }) => {
                         {series.episodes} episodes
                       </div>
                       <div className={`text-xs ${theme === 'light' ? 'text-gray-500' : 'text-gray-400'}`}>
-                        {series.genre.join(', ')}
+                        {Array.isArray(series.genre) ? series.genre.join(', ') : series.genre}
                       </div>
                     </div>
                   </div>

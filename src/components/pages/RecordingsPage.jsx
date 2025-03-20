@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RECORDINGS, WATCHLIST } from '../../constants/recordingsData';
 import { Clock } from 'lucide-react';
 
-const RecordingsPage = ({ theme }) => {
+const RecordingsPage = ({ theme, onContentSelect }) => {
   const [activeTab, setActiveTab] = useState('RECORDINGS');
   
   const tabs = [
@@ -11,6 +11,16 @@ const RecordingsPage = ({ theme }) => {
     { id: 'CONTINUE', label: 'CONTINUE WATCHING' },
     { id: 'RENTED', label: 'RENTED' }
   ];
+  
+  const handleContentClick = (contentId) => {
+    // In a real implementation, we would have unique IDs for each recording
+    // For our mockup, we'll pass a sample content ID
+    if (onContentSelect) {
+      const isWatchlist = activeTab === 'WATCHLIST';
+      const defaultContentId = isWatchlist ? "blacklist-s01e01" : "tagesschau-20250318";
+      onContentSelect(contentId || defaultContentId);
+    }
+  };
   
   return (
     <div className="p-8">
@@ -45,8 +55,9 @@ const RecordingsPage = ({ theme }) => {
             <div 
               key={recording.id} 
               className={`${theme === 'light' ? 'bg-white shadow-md' : 'bg-gray-800'} rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow`}
+              onClick={() => handleContentClick(recording.id)}
             >
-              <div className={`h-40 ${recording.thumbnail}`}></div>
+              <div className={`h-40 ${recording.thumbnail} relative`}></div>
               <div className="p-4">
                 <h3 className="font-medium mb-2">{recording.title}</h3>
                 <div className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-gray-300'}`}>
@@ -68,8 +79,9 @@ const RecordingsPage = ({ theme }) => {
             <div 
               key={item.id} 
               className={`${theme === 'light' ? 'bg-white shadow-md' : 'bg-gray-800'} rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow`}
+              onClick={() => handleContentClick(item.id)}
             >
-              <div className={`h-40 ${item.thumbnail}`}></div>
+              <div className={`h-40 ${item.thumbnail} relative`}></div>
               <div className="p-4">
                 <h3 className="font-medium mb-2">{item.title}</h3>
                 <div className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-gray-300'}`}>

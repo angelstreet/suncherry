@@ -91,7 +91,7 @@ function App() {
   return (
     <AuthProvider>
       <div className={`min-h-screen flex flex-col ${theme === 'light' ? 'bg-gray-100 text-gray-900' : 'bg-black text-white'}`}>
-        {/* Only show navbar and footer if not in player mode */}
+        {/* Only show navbar if not in player mode */}
         {!isPlaying && (
           <Navbar 
             theme={theme} 

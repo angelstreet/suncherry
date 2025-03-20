@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { ChevronLeft, Play, Plus, Monitor, Clock, Download, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-const ContentDetailPage = ({ content, onBack, theme }) => {
+const ContentDetailPage = ({ content, onBack, theme, onPlay }) => {
   const [activeTab, setActiveTab] = useState('Trailer');
+  const [trailerFullscreen, setTrailerFullscreen] = useState(false);
   const { isLoggedIn } = useAuth();
   
   // If no content is provided, show a loading state
@@ -25,9 +26,9 @@ const ContentDetailPage = ({ content, onBack, theme }) => {
   
   const handlePlayClick = () => {
     // In a real implementation, this would initiate playback
-    // For our mockup, we'll just log the action
-    console.log(`Playing content: ${content.title}`);
-    // Here you would use your authentication token to start a stream
+    if (onPlay) {
+      onPlay(content);
+    }
   };
   
   const handleRentNow = () => {
@@ -41,19 +42,29 @@ const ContentDetailPage = ({ content, onBack, theme }) => {
     console.log(`Adding to watchlist: ${content.title}`);
   };
   
+  const handleTrailerClick = () => {
+    setTrailerFullscreen(true);
+  };
+  
+  const handleCloseTrailerFullscreen = () => {
+    setTrailerFullscreen(false);
+  };
+  
   return (
-    <div className={`w-full ${theme === 'light' ? 'bg-gray-100' : 'bg-black'} min-h-screen`}>
-      {/* Back button */}
-      <button 
-        onClick={onBack}
-        className="absolute top-4 left-4 z-10 flex items-center text-white hover:text-gray-300"
-      >
-        <ChevronLeft className="w-5 h-5 mr-1" />
-        Back
-      </button>
+    <div className={`w-full ${theme === 'light' ? 'bg-gray-100' : 'bg-black'}`}>
+      {/* Header with navigation */}
+      <div className="relative h-14 flex items-center px-4">
+        <button 
+          onClick={onBack}
+          className="flex items-center text-white/80 hover:text-white"
+        >
+          <ChevronLeft className="w-5 h-5 mr-1" />
+          Back
+        </button>
+      </div>
       
       {/* Hero section with background */}
-      <div className="relative w-full h-[500px]">
+      <div className="relative w-full h-[400px]">
         {/* Background image */}
         <div 
           className="absolute inset-0 bg-cover bg-center"
@@ -185,19 +196,44 @@ const ContentDetailPage = ({ content, onBack, theme }) => {
       {/* Tab content */}
       <div className="p-8">
         {activeTab === 'Trailer' && (
-          <div className="aspect-video bg-gray-900 rounded-lg flex items-center justify-center">
-            {content.trailerThumbnail ? (
-              <img 
-                src={content.trailerThumbnail} 
-                alt={`${content.title} trailer`} 
-                className="w-full h-full object-cover rounded-lg"
-              />
+          <>
+            {trailerFullscreen ? (
+              // Fullscreen trailer view
+              <div className="fixed inset-0 bg-black z-50 flex items-center justify-center" onClick={handleCloseTrailerFullscreen}>
+                <button className="absolute top-4 right-4 text-white p-2" onClick={handleCloseTrailerFullscreen}>
+                  <ChevronLeft className="w-6 h-6" /> Back
+                </button>
+                <div className="w-full h-full max-w-5xl max-h-[80vh]">
+                  <div className="aspect-video w-full h-full bg-gray-900 flex items-center justify-center">
+                    <Play className="w-20 h-20 text-white opacity-70" />
+                  </div>
+                </div>
+              </div>
             ) : (
-              <div className={`w-full h-full flex items-center justify-center ${content.color || 'bg-gray-800'} rounded-lg`}>
-                <Play className="w-16 h-16 text-white opacity-70" />
+              // Thumbnail trailer view
+              <div 
+                className="max-w-md mx-auto cursor-pointer" 
+                onClick={handleTrailerClick}
+              >
+                <div className="aspect-video bg-gray-900 rounded-lg flex items-center justify-center group relative overflow-hidden">
+                  {content.trailerThumbnail ? (
+                    <img 
+                      src={content.trailerThumbnail} 
+                      alt={`${content.title} trailer`} 
+                      className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className={`w-full h-full flex items-center justify-center ${content.color || 'bg-gray-800'} rounded-lg group-hover:scale-105 transition-transform duration-300`}>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Play className="w-16 h-16 text-white" />
+                  </div>
+                </div>
+                <p className="text-center mt-2 text-sm text-gray-400">Click to play trailer</p>
               </div>
             )}
-          </div>
+          </>
         )}
         
         {activeTab === 'Cast & Crew' && (

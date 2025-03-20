@@ -1,8 +1,21 @@
 import React, { useState } from 'react';
 import { TV_CHANNELS, TIME_SLOTS } from '../../constants/tvGuideData';
 
-const TvGuidePage = ({ theme }) => {
+const TvGuidePage = ({ theme, onContentSelect }) => {
   const [selectedProgram, setSelectedProgram] = useState(null);
+  
+  const handleProgramClick = (program) => {
+    setSelectedProgram(program);
+  };
+  
+  const handleWatchClick = () => {
+    if (onContentSelect && selectedProgram) {
+      // In a real app, we'd use the program's unique ID
+      // For our mockup, we'll just use a sample ID
+      onContentSelect("tagesschau-20250318");
+    }
+    setSelectedProgram(null);
+  };
   
   return (
     <div className="p-8">
@@ -40,7 +53,7 @@ const TvGuidePage = ({ theme }) => {
                     className={`p-2 ${theme === 'light' ? 'bg-gray-100' : 'bg-gray-800'} rounded 
                       hover:bg-red-600 transition-colors cursor-pointer`}
                     style={{ gridColumn: `span ${program.duration}` }}
-                    onClick={() => setSelectedProgram(program)}
+                    onClick={() => handleProgramClick(program)}
                   >
                     <div className="font-medium">{program.title}</div>
                     <div className="text-sm opacity-70">
@@ -68,7 +81,10 @@ const TvGuidePage = ({ theme }) => {
             <div className="text-sm mb-4">{selectedProgram.startTime} - {selectedProgram.endTime}</div>
             <p className="text-sm mb-6">Program description would appear here. This content provides details about the selected program.</p>
             <div className="flex space-x-3">
-              <button className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+              <button 
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                onClick={handleWatchClick}
+              >
                 Watch
               </button>
               <button className="border border-gray-600 px-4 py-2 rounded hover:bg-gray-800">

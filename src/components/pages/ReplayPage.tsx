@@ -2,8 +2,15 @@ import React, { useState } from 'react';
 import { Clock, Search } from 'lucide-react';
 import { REPLAY_CATEGORIES, REPLAY_SHOWS } from '../../constants/replayData';
 
-const ReplayPage = ({ theme }) => {
+const ReplayPage = ({ theme, onContentSelect }) => {
   const [activeCategory, setActiveCategory] = useState('DISCOVER');
+  
+  const handleContentClick = (contentId) => {
+    // Use the default if no real ID exists
+    if (onContentSelect) {
+      onContentSelect(contentId || "kassensturz-20250318");
+    }
+  };
   
   return (
     <div className="w-full">
@@ -60,6 +67,7 @@ const ReplayPage = ({ theme }) => {
                   key={item.id} 
                   className={`${theme === 'light' ? 'bg-white shadow-md' : 'bg-gray-800'} 
                     rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow`}
+                  onClick={() => handleContentClick(item.id)}
                 >
                   {/* Thumbnail */}
                   <div className={`h-40 ${item.thumbnail} relative`}>
